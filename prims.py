@@ -9,6 +9,7 @@ def prim(graph):
             visited.add(current)
             mst.append((cost, current))
             pq.extend((neighbor_cost, neighbor) for neighbor, neighbor_cost in graph[current] if neighbor not in visited)
+            #pq.extend((y, x) for x,y in graph[node] if x not in visited)
 
     return mst
 
