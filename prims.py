@@ -1,35 +1,20 @@
 import heapq
-class Solution:
-    def spanningTree(self, V, adj):
-        pq = [(0, 0)]  # (wt, node)
-        vis = [0] * V
-        sum = 0
 
-        while pq:
-            wt, node = heapq.heappop(pq)
+def prim(graph):
+    visited, mst, pq = set(), [], [(0, list(graph.keys())[0])]
 
-            if vis[node] == 1:
-                continue
+    while pq:
+        cost, current = heapq.heappop(pq)
+        if current not in visited:
+            visited.add(current)
+            mst.append((cost, current))
+            pq.extend((neighbor_cost, neighbor) for neighbor, neighbor_cost in graph[current] if neighbor not in visited)
 
-            vis[node] = 1
-            sum += wt
+    return mst
 
-            for neighbor in adj[node]:
-                adjNode, edW = neighbor[0], neighbor[1]
-                if not vis[adjNode]:
-                    heapq.heappush(pq, (edW, adjNode))
+# Example usage
+graph = {'A': [('B', 2), ('C', 3)], 'B': [('A', 2), ('C', 4), ('D', 1)],
+         'C': [('A', 3), ('B', 4), ('D', 5)], 'D': [('B', 1), ('C', 5)]}
 
-        return sum
-
-if __name__ == "__main__":
-    V = 5
-    edges = [[0, 1, 2], [0, 2, 1], [1, 2, 1], [2, 3, 2], [3, 4, 1], [4, 2, 2]]
-    adj = [[] for _ in range(V)]
-
-    for it in edges:
-        adj[it[0]].append([it[1], it[2]])
-        adj[it[1]].append([it[0], it[2]])
-
-    obj = Solution()
-    result = obj.spanningTree(V, adj)
-    print("The sum of all the edge weights:", result)
+result = prim(graph)
+print("Minimum Spanning Tree:", result)
